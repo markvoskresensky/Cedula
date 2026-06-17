@@ -11,7 +11,7 @@ import SwiftUI
 struct CedulaApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ConversationList.view()
         }
     }
 }
