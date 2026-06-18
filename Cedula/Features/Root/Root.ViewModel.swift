@@ -22,11 +22,13 @@ extension Root {
         let authService: AuthService
         let userService: UserService
         let chatService: ChatService
+        let networkMonitor: NetworkMonitor
 
-        init(authService: AuthService, userService: UserService, chatService: ChatService) {
+        init(authService: AuthService, userService: UserService, chatService: ChatService, networkMonitor: NetworkMonitor) {
             self.authService = authService
             self.userService = userService
             self.chatService = chatService
+            self.networkMonitor = networkMonitor
         }
 
         func observe() async {

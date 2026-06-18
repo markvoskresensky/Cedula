@@ -17,6 +17,13 @@ extension Root {
 
         var body: some View {
             content
+                .safeAreaInset(edge: .top, spacing: 0) {
+                    if !model.networkMonitor.isConnected {
+                        NoConnectionBanner()
+                            .transition(.move(edge: .top))
+                    }
+                }
+                .animation(.default, value: model.networkMonitor.isConnected)
                 .task { await model.observe() }
         }
     }
