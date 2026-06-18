@@ -17,6 +17,22 @@
         }
       }
     },
+    "common_cancel_button_title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Отмена"
+          }
+        }
+      }
+    },
     "common_error_title" : {
       "localizations" : {
         "en" : {
@@ -65,6 +81,22 @@
         }
       }
     },
+    "conversation_list_screen_new_chat_button_title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New Chat"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Новый чат"
+          }
+        }
+      }
+    },
     "conversation_list_screen_sign_out_button_title" : {
       "localizations" : {
         "en" : {
@@ -93,6 +125,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Чаты"
+          }
+        }
+      }
+    },
+    "new_chat_screen_empty_title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No users yet"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пока нет пользователей"
+          }
+        }
+      }
+    },
+    "new_chat_screen_title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New Chat"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Новый чат"
           }
         }
       }

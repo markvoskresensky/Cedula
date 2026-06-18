@@ -30,9 +30,13 @@ private extension Root.Screen {
             ProgressView()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         case .signedOut:
-            Login.view(authService: model.authService)
+            Login.view(authService: model.authService, userService: model.userService)
         case .signedIn:
-            ConversationList.view(authService: model.authService)
+            ConversationList.view(
+                authService: model.authService,
+                userService: model.userService,
+                chatService: model.chatService
+            )
         }
     }
 }

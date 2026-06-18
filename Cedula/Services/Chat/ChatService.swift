@@ -9,7 +9,8 @@ import Foundation
 
 @MainActor
 protocol ChatService {
-    func loadConversations() async -> [Conversation]
+    func conversations(for userID: String) -> AsyncStream<[Conversation]>
     func messages(in conversationID: String) -> AsyncStream<[Message]>
     func send(text: String, to conversationID: String, from senderID: String) async throws
+    func createConversation(participants: [User]) async throws -> String
 }

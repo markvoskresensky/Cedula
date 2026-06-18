@@ -10,5 +10,6 @@ import Foundation
 struct User: Identifiable, Hashable, Codable, Sendable {
     let id: String
     var displayName: String
+    var email: String?
     var avatarName: String?
 }

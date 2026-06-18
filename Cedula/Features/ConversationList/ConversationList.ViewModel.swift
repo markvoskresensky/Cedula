@@ -18,19 +18,26 @@ extension ConversationList {
         }
 
         private(set) var state: State = .loading
+        var isPresentingNewChat = false
 
-        private let chatService: ChatService
+        let chatService: ChatService
+        let userService: UserService
         private let authService: AuthService
 
-        init(chatService: ChatService, authService: AuthService) {
+        var currentUser: User {
+            authService.currentUser ?? SampleData.currentUser
+        }
+
+        init(chatService: ChatService, userService: UserService, authService: AuthService) {
             self.chatService = chatService
+            self.userService = userService
             self.authService = authService
         }
 
-        func load() async {
-            state = .loading
-            let conversations = await chatService.loadConversations()
-            state = .loaded(conversations)
+        func observe() async {
+            for await conversations in chatService.conversations(for: currentUser.id) {
+                state = .loaded(conversations)
+            }
         }
 
         func signOut() {

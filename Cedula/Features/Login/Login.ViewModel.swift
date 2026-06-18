@@ -24,9 +24,11 @@ extension Login {
         private(set) var errorMessage: String?
 
         private let authService: AuthService
+        private let userService: UserService
 
-        init(authService: AuthService) {
+        init(authService: AuthService, userService: UserService) {
             self.authService = authService
+            self.userService = userService
         }
 
         var canSubmit: Bool {
@@ -66,6 +68,9 @@ extension Login {
                     try await authService.signIn(email: email, password: password)
                 case .signUp:
                     try await authService.signUp(displayName: displayName, email: email, password: password)
+                    if let user = authService.currentUser {
+                        try? await userService.upsert(user)
+                    }
                 }
             } catch {
                 errorMessage = error.localizedDescription

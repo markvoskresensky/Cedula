@@ -36,6 +36,7 @@ final class FirebaseAuthService: AuthService {
         let request = result.user.createProfileChangeRequest()
         request.displayName = displayName
         try await request.commitChanges()
+        try await result.user.reload()
     }
 
     func signOut() throws {
@@ -46,6 +47,7 @@ final class FirebaseAuthService: AuthService {
         User(
             id: firebaseUser.uid,
             displayName: firebaseUser.displayName ?? firebaseUser.email ?? "User",
+            email: firebaseUser.email,
             avatarName: nil
         )
     }

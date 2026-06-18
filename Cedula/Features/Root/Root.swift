@@ -11,7 +11,11 @@ enum Root {}
 
 extension Root {
     static func view() -> some View {
-        let model = ViewModel(authService: FirebaseAuthService())
+        let model = ViewModel(
+            authService: FirebaseAuthService(),
+            userService: FirestoreUserService(),
+            chatService: FirestoreChatService()
+        )
         return Root.Screen(model: model)
     }
 }

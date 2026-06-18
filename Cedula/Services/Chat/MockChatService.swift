@@ -9,21 +9,27 @@ import Foundation
 
 @MainActor
 final class MockChatService: ChatService {
-    private var store: [String: [Message]]
-    private var continuations: [String: AsyncStream<[Message]>.Continuation] = [:]
+    private var messageStore: [String: [Message]]
+    private var conversationStore: [Conversation]
+    private var messageContinuations: [String: AsyncStream<[Message]>.Continuation] = [:]
+    private var conversationContinuations: [AsyncStream<[Conversation]>.Continuation] = []
 
-    init(seed: [String: [Message]]? = nil) {
-        store = seed ?? SampleData.messagesByConversation
+    init(messages: [String: [Message]]? = nil, conversations: [Conversation]? = nil) {
+        messageStore = messages ?? SampleData.messagesByConversation
+        conversationStore = conversations ?? SampleData.conversations
     }
 
-    func loadConversations() async -> [Conversation] {
-        SampleData.conversations
+    func conversations(for userID: String) -> AsyncStream<[Conversation]> {
+        AsyncStream { continuation in
+            continuation.yield(conversationStore)
+            conversationContinuations.append(continuation)
+        }
     }
 
     func messages(in conversationID: String) -> AsyncStream<[Message]> {
         AsyncStream { continuation in
-            continuation.yield(store[conversationID] ?? [])
-            continuations[conversationID] = continuation
+            continuation.yield(messageStore[conversationID] ?? [])
+            messageContinuations[conversationID] = continuation
         }
     }
 
@@ -36,7 +42,34 @@ final class MockChatService: ChatService {
             sentAt: .now,
             status: .sent
         )
-        store[conversationID, default: []].append(message)
-        continuations[conversationID]?.yield(store[conversationID] ?? [])
+        messageStore[conversationID, default: []].append(message)
+        messageContinuations[conversationID]?.yield(messageStore[conversationID] ?? [])
+
+        if let index = conversationStore.firstIndex(where: { $0.id == conversationID }) {
+            conversationStore[index].lastMessageText = text
+            conversationStore[index].lastMessageDate = message.sentAt
+            broadcastConversations()
+        }
+    }
+
+    func createConversation(participants: [User]) async throws -> String {
+        let id = UUID().uuidString
+        let conversation = Conversation(
+            id: id,
+            title: participants.last?.displayName ?? "Chat",
+            participantIDs: participants.map(\.id),
+            lastMessageText: "",
+            lastMessageDate: .now,
+            unreadCount: 0
+        )
+        conversationStore.insert(conversation, at: 0)
+        broadcastConversations()
+        return id
+    }
+
+    private func broadcastConversations() {
+        for continuation in conversationContinuations {
+            continuation.yield(conversationStore)
+        }
     }
 }

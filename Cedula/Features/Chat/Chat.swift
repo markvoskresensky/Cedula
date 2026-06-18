@@ -10,12 +10,12 @@ import SwiftUI
 enum Chat {}
 
 extension Chat {
-    static func view(conversationID: String, title: String) -> some View {
+    static func view(conversationID: String, title: String, currentUserID: String, chatService: ChatService) -> some View {
         let model = ViewModel(
             conversationID: conversationID,
             title: title,
-            currentUserID: SampleData.currentUser.id,
-            chatService: MockChatService()
+            currentUserID: currentUserID,
+            chatService: chatService
         )
         return Chat.Screen(model: model)
     }
