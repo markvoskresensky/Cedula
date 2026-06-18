@@ -16,8 +16,7 @@ extension Chat {
         }
 
         var body: some View {
-            @Bindable var model = model
-            return messages
+            messages
                 .navigationTitle(model.title)
                 .navigationBarTitleDisplayMode(.inline)
                 .safeAreaInset(edge: .bottom) {

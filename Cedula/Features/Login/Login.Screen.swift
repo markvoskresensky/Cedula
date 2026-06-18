@@ -16,8 +16,7 @@ extension Login {
         }
 
         var body: some View {
-            @Bindable var model = model
-            return NavigationStack {
+            NavigationStack {
                 Form {
                     if model.mode == .signUp {
                         Section {

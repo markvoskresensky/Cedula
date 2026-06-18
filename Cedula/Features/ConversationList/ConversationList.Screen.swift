@@ -16,8 +16,7 @@ extension ConversationList {
         }
 
         var body: some View {
-            @Bindable var model = model
-            return NavigationStack {
+            NavigationStack {
                 content
                     .navigationTitle("conversation_list_screen_title")
                     .toolbar {
