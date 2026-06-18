@@ -20,15 +20,21 @@ extension ConversationList {
         private(set) var state: State = .loading
 
         private let chatService: ChatService
+        private let authService: AuthService
 
-        init(chatService: ChatService) {
+        init(chatService: ChatService, authService: AuthService) {
             self.chatService = chatService
+            self.authService = authService
         }
 
         func load() async {
             state = .loading
             let conversations = await chatService.loadConversations()
             state = .loaded(conversations)
+        }
+
+        func signOut() {
+            try? authService.signOut()
         }
     }
 }

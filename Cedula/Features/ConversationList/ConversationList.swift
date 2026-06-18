@@ -10,8 +10,8 @@ import SwiftUI
 enum ConversationList {}
 
 extension ConversationList {
-    static func view() -> some View {
-        let model = ViewModel(chatService: MockChatService())
+    static func view(authService: AuthService) -> some View {
+        let model = ViewModel(chatService: MockChatService(), authService: authService)
         return ConversationList.Screen(model: model)
     }
 }

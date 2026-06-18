@@ -19,6 +19,13 @@ extension ConversationList {
             NavigationStack {
                 content
                     .navigationTitle("Chats")
+                    .toolbar {
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Button("Sign Out", systemImage: "rectangle.portrait.and.arrow.right") {
+                                model.signOut()
+                            }
+                        }
+                    }
                     .task { await model.load() }
             }
         }
