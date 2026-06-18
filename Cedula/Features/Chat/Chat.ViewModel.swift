@@ -13,7 +13,11 @@ extension Chat {
     final class ViewModel {
         let title: String
         private(set) var messages: [Message] = []
-        var draft: String = ""
+        private(set) var isOtherTyping = false
+        var draft: String = "" {
+            didSet { updateTyping() }
+        }
+        private var isTypingState = false
 
         let currentUserID: String
         private let conversationID: String
@@ -31,6 +35,25 @@ extension Chat {
                 self.messages = messages
                 await markIncomingAsRead()
             }
+        }
+
+        func observeTyping() async {
+            for await typing in chatService.typing(in: conversationID, excluding: currentUserID) {
+                isOtherTyping = typing
+            }
+        }
+
+        private func updateTyping() {
+            let typingNow = !draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            guard typingNow != isTypingState else { return }
+            isTypingState = typingNow
+            Task { await chatService.setTyping(conversationID: conversationID, userID: currentUserID, isTyping: typingNow) }
+        }
+
+        func stopTyping() {
+            guard isTypingState else { return }
+            isTypingState = false
+            Task { await chatService.setTyping(conversationID: conversationID, userID: currentUserID, isTyping: false) }
         }
 
         private func markIncomingAsRead() async {

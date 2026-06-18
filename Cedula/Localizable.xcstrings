@@ -20,6 +20,22 @@
         }
       }
     },
+    "chat_typing_indicator" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "typing…"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "печатает…"
+          }
+        }
+      }
+    },
     "common_today" : {
       "localizations" : {
         "en" : {

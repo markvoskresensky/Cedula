@@ -20,12 +20,25 @@ extension Chat {
                 .navigationTitle(model.title)
                 .navigationBarTitleDisplayMode(.inline)
                 .safeAreaInset(edge: .bottom) {
-                    ChatInputBar(text: $model.draft) {
-                        Task { await model.send() }
+                    VStack(spacing: 0) {
+                        if model.isOtherTyping {
+                            Text("chat_typing_indicator")
+                                .font(.caption)
+                                .foregroundStyle(Theme.Palette.secondaryText)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.horizontal, Theme.Spacing.m)
+                                .padding(.top, Theme.Spacing.xs)
+                        }
+                        ChatInputBar(text: $model.draft) {
+                            Task { await model.send() }
+                        }
                     }
                     .background(.bar)
                 }
+                .animation(.default, value: model.isOtherTyping)
                 .task { await model.observe() }
+                .task { await model.observeTyping() }
+                .onDisappear { model.stopTyping() }
         }
     }
 }

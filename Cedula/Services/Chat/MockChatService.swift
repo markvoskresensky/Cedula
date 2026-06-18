@@ -52,6 +52,26 @@ final class MockChatService: ChatService {
         }
     }
 
+    private var typingStore: [String: Set<String>] = [:]
+    private var typingSubscribers: [(conversationID: String, excluding: String, continuation: AsyncStream<Bool>.Continuation)] = []
+
+    func setTyping(conversationID: String, userID: String, isTyping: Bool) async {
+        var set = typingStore[conversationID] ?? []
+        if isTyping { set.insert(userID) } else { set.remove(userID) }
+        typingStore[conversationID] = set
+        for subscriber in typingSubscribers where subscriber.conversationID == conversationID {
+            subscriber.continuation.yield(set.contains { $0 != subscriber.excluding })
+        }
+    }
+
+    func typing(in conversationID: String, excluding userID: String) -> AsyncStream<Bool> {
+        AsyncStream { continuation in
+            let set = typingStore[conversationID] ?? []
+            continuation.yield(set.contains { $0 != userID })
+            typingSubscribers.append((conversationID, userID, continuation))
+        }
+    }
+
     func markAsRead(conversationID: String, messageIDs: [String]) async {
         guard var messages = messageStore[conversationID] else { return }
         let ids = Set(messageIDs)

@@ -68,6 +68,25 @@ final class FirestoreChatService: ChatService {
         try await batch.commit()
     }
 
+    func setTyping(conversationID: String, userID: String, isTyping: Bool) async {
+        let ref = db.collection("conversations").document(conversationID)
+        let value: Any = isTyping ? FieldValue.serverTimestamp() : FieldValue.delete()
+        try? await ref.updateData(["typing.\(userID)": value])
+    }
+
+    func typing(in conversationID: String, excluding userID: String) -> AsyncStream<Bool> {
+        AsyncStream { continuation in
+            nonisolated(unsafe) let listener = db.collection("conversations")
+                .document(conversationID)
+                .addSnapshotListener { snapshot, _ in
+                    let typingMap = snapshot?.data()?["typing"] as? [String: Any] ?? [:]
+                    let othersTyping = typingMap.keys.contains { $0 != userID }
+                    continuation.yield(othersTyping)
+                }
+            continuation.onTermination = { _ in listener.remove() }
+        }
+    }
+
     func markAsRead(conversationID: String, messageIDs: [String]) async {
         guard !messageIDs.isEmpty else { return }
         let messagesRef = db.collection("conversations")
