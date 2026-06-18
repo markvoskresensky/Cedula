@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "%lld" : {
+
+    },
     "chat_input_bar_placeholder" : {
       "localizations" : {
         "en" : {
@@ -13,6 +16,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Сообщение"
+          }
+        }
+      }
+    },
+    "common_cancel_button_title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Отмена"
           }
         }
       }
@@ -61,6 +80,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Пока нет чатов"
+          }
+        }
+      }
+    },
+    "conversation_list_screen_new_chat_button_title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New Chat"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Новый чат"
           }
         }
       }
@@ -237,6 +272,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Нет аккаунта? Зарегистрироваться"
+          }
+        }
+      }
+    },
+    "new_chat_screen_empty_title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No users yet"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пока нет пользователей"
+          }
+        }
+      }
+    },
+    "new_chat_screen_title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New Chat"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Новый чат"
           }
         }
       }

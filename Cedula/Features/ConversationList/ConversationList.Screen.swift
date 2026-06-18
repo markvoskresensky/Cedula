@@ -20,13 +20,25 @@ extension ConversationList {
                 content
                     .navigationTitle("conversation_list_screen_title")
                     .toolbar {
-                        ToolbarItem(placement: .topBarTrailing) {
+                        ToolbarItem(placement: .topBarLeading) {
                             Button("conversation_list_screen_sign_out_button_title", systemImage: "rectangle.portrait.and.arrow.right") {
                                 model.signOut()
                             }
                         }
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Button("conversation_list_screen_new_chat_button_title", systemImage: "square.and.pencil") {
+                                model.isPresentingNewChat = true
+                            }
+                        }
                     }
-                    .task { await model.load() }
+                    .task { await model.observe() }
+                    .sheet(isPresented: $model.isPresentingNewChat) {
+                        NewChat.view(
+                            currentUser: model.currentUser,
+                            chatService: model.chatService,
+                            userService: model.userService
+                        )
+                    }
             }
         }
     }
@@ -45,7 +57,7 @@ private extension ConversationList.Screen {
             } description: {
                 Text(message)
             } actions: {
-                Button("common_retry_button_title") { Task { await model.load() } }
+                Button("common_retry_button_title") { Task { await model.observe() } }
             }
         case .loaded(let conversations):
             list(conversations)
@@ -59,7 +71,12 @@ private extension ConversationList.Screen {
         } else {
             List(conversations) { conversation in
                 NavigationLink {
-                    Chat.view(conversationID: conversation.id, title: conversation.title)
+                    Chat.view(
+                        conversationID: conversation.id,
+                        title: conversation.title,
+                        currentUserID: model.currentUser.id,
+                        chatService: model.chatService
+                    )
                 } label: {
                     ConversationList.Row(conversation: conversation)
                 }
