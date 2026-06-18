@@ -40,11 +40,15 @@ extension Login {
         }
 
         var submitTitle: String {
-            mode == .signIn ? "Sign In" : "Create Account"
+            mode == .signIn
+                ? String(localized: "login_screen_sign_in_button_title")
+                : String(localized: "login_screen_create_account_button_title")
         }
 
         var switchModeTitle: String {
-            mode == .signIn ? "No account? Sign Up" : "Have an account? Sign In"
+            mode == .signIn
+                ? String(localized: "login_screen_switch_to_sign_up_title")
+                : String(localized: "login_screen_switch_to_sign_in_title")
         }
 
         func toggleMode() {

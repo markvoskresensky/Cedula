@@ -18,10 +18,10 @@ extension ConversationList {
         var body: some View {
             NavigationStack {
                 content
-                    .navigationTitle("Chats")
+                    .navigationTitle("conversation_list_screen_title")
                     .toolbar {
                         ToolbarItem(placement: .topBarTrailing) {
-                            Button("Sign Out", systemImage: "rectangle.portrait.and.arrow.right") {
+                            Button("conversation_list_screen_sign_out_button_title", systemImage: "rectangle.portrait.and.arrow.right") {
                                 model.signOut()
                             }
                         }
@@ -41,11 +41,11 @@ private extension ConversationList.Screen {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         case .failed(let message):
             ContentUnavailableView {
-                Label("Something went wrong", systemImage: "exclamationmark.triangle")
+                Label("common_error_title", systemImage: "exclamationmark.triangle")
             } description: {
                 Text(message)
             } actions: {
-                Button("Retry") { Task { await model.load() } }
+                Button("common_retry_button_title") { Task { await model.load() } }
             }
         case .loaded(let conversations):
             list(conversations)
@@ -55,7 +55,7 @@ private extension ConversationList.Screen {
     @ViewBuilder
     func list(_ conversations: [Conversation]) -> some View {
         if conversations.isEmpty {
-            ContentUnavailableView("No chats yet", systemImage: "bubble.left.and.bubble.right")
+            ContentUnavailableView("conversation_list_screen_empty_title", systemImage: "bubble.left.and.bubble.right")
         } else {
             List(conversations) { conversation in
                 NavigationLink {

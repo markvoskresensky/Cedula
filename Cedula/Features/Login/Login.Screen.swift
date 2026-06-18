@@ -21,18 +21,18 @@ extension Login {
                 Form {
                     if model.mode == .signUp {
                         Section {
-                            TextField("Name", text: $model.displayName)
+                            TextField("login_screen_name_field_title", text: $model.displayName)
                                 .textContentType(.name)
                         }
                     }
 
                     Section {
-                        TextField("Email", text: $model.email)
+                        TextField("login_screen_email_field_title", text: $model.email)
                             .textContentType(.emailAddress)
                             .keyboardType(.emailAddress)
                             .textInputAutocapitalization(.never)
                             .autocorrectionDisabled()
-                        SecureField("Password", text: $model.password)
+                        SecureField("login_screen_password_field_title", text: $model.password)
                             .textContentType(model.mode == .signUp ? .newPassword : .password)
                     } footer: {
                         if let error = model.errorMessage {
@@ -63,7 +63,7 @@ extension Login {
                         }
                     }
                 }
-                .navigationTitle(model.mode == .signIn ? "Sign In" : "Sign Up")
+                .navigationTitle(model.mode == .signIn ? Text("login_screen_sign_in_title") : Text("login_screen_sign_up_title"))
             }
         }
     }
