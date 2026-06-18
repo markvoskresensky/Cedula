@@ -20,10 +20,18 @@ struct MessageBubble: View {
                     .font(.messageBody)
                     .foregroundStyle(textColor)
 
-                Text(message.sentAt, style: .time)
-                    .font(.timestamp)
-                    .foregroundStyle(timeColor)
-                    .frame(maxWidth: .infinity, alignment: .trailing)
+                HStack(spacing: Theme.Spacing.xs) {
+                    Text(message.sentAt, style: .time)
+                        .font(.timestamp)
+                        .foregroundStyle(timeColor)
+
+                    if isOutgoing, let statusSymbol {
+                        Image(systemName: statusSymbol)
+                            .font(.timestamp)
+                            .foregroundStyle(timeColor)
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .trailing)
             }
             .padding(.horizontal, Theme.Spacing.m)
             .padding(.vertical, Theme.Spacing.s)
@@ -40,5 +48,14 @@ struct MessageBubble: View {
 
     private var timeColor: Color {
         isOutgoing ? Theme.Palette.bubbleOutgoingText.opacity(0.7) : Theme.Palette.secondaryText
+    }
+
+    private var statusSymbol: String? {
+        switch message.status {
+        case .sending: "clock"
+        case .sent: "checkmark"
+        case .delivered: "checkmark.circle"
+        case .read: "checkmark.circle.fill"
+        }
     }
 }

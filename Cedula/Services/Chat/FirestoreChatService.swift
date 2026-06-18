@@ -33,7 +33,7 @@ final class FirestoreChatService: ChatService {
                 .document(conversationID)
                 .collection("messages")
                 .order(by: "sentAt")
-                .addSnapshotListener { snapshot, _ in
+                .addSnapshotListener(includeMetadataChanges: true) { snapshot, _ in
                     let items = snapshot?.documents.compactMap {
                         Self.message(from: $0, conversationID: conversationID)
                     } ?? []
@@ -107,7 +107,9 @@ final class FirestoreChatService: ChatService {
             return nil
         }
         let sentAt = (data["sentAt"] as? Timestamp)?.dateValue() ?? Date()
-        let status = Message.Status(rawValue: data["status"] as? String ?? "") ?? .sent
+        let storedStatus = Message.Status(rawValue: data["status"] as? String ?? "") ?? .sent
+        // While the local write isn't acknowledged by the server (offline/in flight) show .sending
+        let status: Message.Status = document.metadata.hasPendingWrites ? .sending : storedStatus
         return Message(
             id: document.documentID,
             conversationID: conversationID,
