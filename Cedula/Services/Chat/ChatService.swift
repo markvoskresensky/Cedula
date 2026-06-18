@@ -13,4 +13,5 @@ protocol ChatService {
     func messages(in conversationID: String) -> AsyncStream<[Message]>
     func send(text: String, to conversationID: String, from senderID: String) async throws
     func createConversation(participants: [User]) async throws -> String
+    func markAsRead(conversationID: String, messageIDs: [String]) async
 }

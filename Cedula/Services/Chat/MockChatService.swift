@@ -52,6 +52,19 @@ final class MockChatService: ChatService {
         }
     }
 
+    func markAsRead(conversationID: String, messageIDs: [String]) async {
+        guard var messages = messageStore[conversationID] else { return }
+        let ids = Set(messageIDs)
+        var changed = false
+        for index in messages.indices where ids.contains(messages[index].id) {
+            messages[index].status = .read
+            changed = true
+        }
+        guard changed else { return }
+        messageStore[conversationID] = messages
+        messageContinuations[conversationID]?.yield(messages)
+    }
+
     func createConversation(participants: [User]) async throws -> String {
         let id = UUID().uuidString
         let conversation = Conversation(

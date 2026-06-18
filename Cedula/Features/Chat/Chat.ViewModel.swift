@@ -29,7 +29,16 @@ extension Chat {
         func observe() async {
             for await messages in chatService.messages(in: conversationID) {
                 self.messages = messages
+                await markIncomingAsRead()
             }
+        }
+
+        private func markIncomingAsRead() async {
+            let unreadIDs = messages
+                .filter { $0.senderID != currentUserID && $0.status != .read && $0.status != .sending }
+                .map(\.id)
+            guard !unreadIDs.isEmpty else { return }
+            await chatService.markAsRead(conversationID: conversationID, messageIDs: unreadIDs)
         }
 
         func send() async {

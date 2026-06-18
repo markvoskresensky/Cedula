@@ -68,6 +68,18 @@ final class FirestoreChatService: ChatService {
         try await batch.commit()
     }
 
+    func markAsRead(conversationID: String, messageIDs: [String]) async {
+        guard !messageIDs.isEmpty else { return }
+        let messagesRef = db.collection("conversations")
+            .document(conversationID)
+            .collection("messages")
+        let batch = db.batch()
+        for id in messageIDs {
+            batch.updateData(["status": Message.Status.read.rawValue], forDocument: messagesRef.document(id))
+        }
+        try? await batch.commit()
+    }
+
     func createConversation(participants: [User]) async throws -> String {
         let ref = db.collection("conversations").document()
         var participantNames: [String: String] = [:]
