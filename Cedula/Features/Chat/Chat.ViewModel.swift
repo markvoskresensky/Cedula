@@ -42,6 +42,19 @@ extension Chat {
         func isOutgoing(_ message: Message) -> Bool {
             message.senderID == currentUserID
         }
+
+        struct DayGroup: Identifiable {
+            let id: Date
+            let messages: [Message]
+        }
+
+        var dayGroups: [DayGroup] {
+            let calendar = Calendar.current
+            let grouped = Dictionary(grouping: messages) { calendar.startOfDay(for: $0.sentAt) }
+            return grouped.keys.sorted().map { day in
+                DayGroup(id: day, messages: grouped[day]?.sorted { $0.sentAt < $1.sentAt } ?? [])
+            }
+        }
     }
 }
 

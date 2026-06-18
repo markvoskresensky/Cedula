@@ -35,9 +35,12 @@ private extension Chat.Screen {
         ScrollViewReader { proxy in
             ScrollView {
                 LazyVStack(spacing: Theme.Spacing.s) {
-                    ForEach(model.messages) { message in
-                        MessageBubble(message: message, isOutgoing: model.isOutgoing(message))
-                            .id(message.id)
+                    ForEach(model.dayGroups) { group in
+                        DateSeparator(date: group.id)
+                        ForEach(group.messages) { message in
+                            row(for: message)
+                                .id(message.id)
+                        }
                     }
                 }
                 .padding(.horizontal, Theme.Spacing.m)
@@ -49,6 +52,17 @@ private extension Chat.Screen {
             .onAppear {
                 scrollToLast(proxy, animated: false)
             }
+        }
+    }
+
+    @ViewBuilder
+    func row(for message: Message) -> some View {
+        let isOutgoing = model.isOutgoing(message)
+        HStack(alignment: .bottom, spacing: Theme.Spacing.xs) {
+            if !isOutgoing {
+                Avatar(name: model.title, size: 28)
+            }
+            MessageBubble(message: message, isOutgoing: isOutgoing)
         }
     }
 
