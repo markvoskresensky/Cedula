@@ -22,16 +22,18 @@ extension ConversationList {
 
         let chatService: ChatService
         let userService: UserService
+        let storageService: StorageService
         private let authService: AuthService
 
         var currentUser: User {
             authService.currentUser ?? SampleData.currentUser
         }
 
-        init(chatService: ChatService, userService: UserService, authService: AuthService) {
+        init(chatService: ChatService, userService: UserService, authService: AuthService, storageService: StorageService) {
             self.chatService = chatService
             self.userService = userService
             self.authService = authService
+            self.storageService = storageService
         }
 
         func observe() async {

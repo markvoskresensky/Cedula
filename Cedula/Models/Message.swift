@@ -12,6 +12,7 @@ struct Message: Identifiable, Hashable, Codable, Sendable {
     let conversationID: String
     let senderID: String
     var text: String
+    var imageURL: String?
     var sentAt: Date
     var status: Status
 

@@ -43,24 +43,26 @@ final class FirestoreChatService: ChatService {
         }
     }
 
-    func send(text: String, to conversationID: String, from senderID: String) async throws {
+    func send(text: String, imageURL: String?, to conversationID: String, from senderID: String) async throws {
         let conversationRef = db.collection("conversations").document(conversationID)
         let messageRef = conversationRef.collection("messages").document()
         let now = Date()
 
+        var messageData: [String: Any] = [
+            "senderID": senderID,
+            "text": text,
+            "sentAt": Timestamp(date: now),
+            "status": Message.Status.sent.rawValue,
+        ]
+        if let imageURL {
+            messageData["imageURL"] = imageURL
+        }
+
         let batch = db.batch()
-        batch.setData(
-            [
-                "senderID": senderID,
-                "text": text,
-                "sentAt": Timestamp(date: now),
-                "status": Message.Status.sent.rawValue,
-            ],
-            forDocument: messageRef
-        )
+        batch.setData(messageData, forDocument: messageRef)
         batch.updateData(
             [
-                "lastMessageText": text,
+                "lastMessageText": imageURL != nil && text.isEmpty ? "📷" : text,
                 "lastMessageDate": Timestamp(date: now),
             ],
             forDocument: conversationRef
@@ -146,6 +148,7 @@ final class FirestoreChatService: ChatService {
             conversationID: conversationID,
             senderID: senderID,
             text: text,
+            imageURL: data["imageURL"] as? String,
             sentAt: sentAt,
             status: status
         )

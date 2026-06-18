@@ -15,6 +15,7 @@ extension Root {
             authService: FirebaseAuthService(),
             userService: FirestoreUserService(),
             chatService: FirestoreChatService(),
+            storageService: FirebaseStorageService(),
             networkMonitor: NetworkMonitor()
         )
         return Root.Screen(model: model)

@@ -22,12 +22,14 @@ extension Chat {
         let currentUserID: String
         private let conversationID: String
         private let chatService: ChatService
+        private let storageService: StorageService
 
-        init(conversationID: String, title: String, currentUserID: String, chatService: ChatService) {
+        init(conversationID: String, title: String, currentUserID: String, chatService: ChatService, storageService: StorageService) {
             self.conversationID = conversationID
             self.title = title
             self.currentUserID = currentUserID
             self.chatService = chatService
+            self.storageService = storageService
         }
 
         func observe() async {
@@ -68,7 +70,17 @@ extension Chat {
             let text = draft.trimmingCharacters(in: .whitespacesAndNewlines)
             guard !text.isEmpty else { return }
             draft = ""
-            try? await chatService.send(text: text, to: conversationID, from: currentUserID)
+            try? await chatService.send(text: text, imageURL: nil, to: conversationID, from: currentUserID)
+        }
+
+        func sendImage(_ data: Data) async {
+            let path = "conversations/\(conversationID)/\(UUID().uuidString).jpg"
+            do {
+                let url = try await storageService.uploadImage(data, path: path)
+                try await chatService.send(text: "", imageURL: url, to: conversationID, from: currentUserID)
+            } catch {
+                // Upload/send failure ignored for now
+            }
         }
 
         func isOutgoing(_ message: Message) -> Bool {

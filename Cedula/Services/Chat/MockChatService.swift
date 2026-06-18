@@ -33,12 +33,13 @@ final class MockChatService: ChatService {
         }
     }
 
-    func send(text: String, to conversationID: String, from senderID: String) async throws {
+    func send(text: String, imageURL: String?, to conversationID: String, from senderID: String) async throws {
         let message = Message(
             id: UUID().uuidString,
             conversationID: conversationID,
             senderID: senderID,
             text: text,
+            imageURL: imageURL,
             sentAt: .now,
             status: .sent
         )
@@ -46,7 +47,7 @@ final class MockChatService: ChatService {
         messageContinuations[conversationID]?.yield(messageStore[conversationID] ?? [])
 
         if let index = conversationStore.firstIndex(where: { $0.id == conversationID }) {
-            conversationStore[index].lastMessageText = text
+            conversationStore[index].lastMessageText = imageURL != nil && text.isEmpty ? "📷" : text
             conversationStore[index].lastMessageDate = message.sentAt
             broadcastConversations()
         }

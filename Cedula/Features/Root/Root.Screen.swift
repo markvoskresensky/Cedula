@@ -42,7 +42,8 @@ private extension Root.Screen {
             ConversationList.view(
                 authService: model.authService,
                 userService: model.userService,
-                chatService: model.chatService
+                chatService: model.chatService,
+                storageService: model.storageService
             )
         }
     }

@@ -31,6 +31,8 @@ extension Chat {
                         }
                         ChatInputBar(text: $model.draft) {
                             Task { await model.send() }
+                        } onPickImage: { data in
+                            Task { await model.sendImage(data) }
                         }
                     }
                     .background(.bar)
