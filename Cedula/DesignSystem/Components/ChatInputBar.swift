@@ -13,7 +13,7 @@ struct ChatInputBar: View {
 
     var body: some View {
         HStack(spacing: Theme.Spacing.s) {
-            TextField("Message", text: $text, axis: .vertical)
+            TextField("chat_input_bar_placeholder", text: $text, axis: .vertical)
                 .textFieldStyle(.plain)
                 .padding(.horizontal, Theme.Spacing.m)
                 .padding(.vertical, Theme.Spacing.s)

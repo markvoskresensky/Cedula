@@ -13,7 +13,7 @@ struct CedulaApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ConversationList.view()
+            Root.view()
         }
     }
 }

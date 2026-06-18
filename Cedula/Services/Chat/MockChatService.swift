@@ -12,8 +12,8 @@ final class MockChatService: ChatService {
     private var store: [String: [Message]]
     private var continuations: [String: AsyncStream<[Message]>.Continuation] = [:]
 
-    init(seed: [String: [Message]] = SampleData.messagesByConversation) {
-        store = seed
+    init(seed: [String: [Message]]? = nil) {
+        store = seed ?? SampleData.messagesByConversation
     }
 
     func loadConversations() async -> [Conversation] {
