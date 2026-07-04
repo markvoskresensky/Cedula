@@ -93,6 +93,10 @@ extension Chat {
         }
 
         var dayGroups: [DayGroup] {
+            Self.dayGroups(from: messages)
+        }
+
+        static func dayGroups(from messages: [Message]) -> [DayGroup] {
             let calendar = Calendar.current
             let grouped = Dictionary(grouping: messages) { calendar.startOfDay(for: $0.sentAt) }
             return grouped.keys.sorted().map { day in
