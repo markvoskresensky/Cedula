@@ -11,4 +11,5 @@ import Foundation
 protocol UserService {
     func upsert(_ user: User) async throws
     func others(excluding userID: String) async throws -> [User]
+    func addFCMToken(_ token: String, for userID: String) async
 }

@@ -22,6 +22,13 @@ final class FirestoreUserService: UserService {
         )
     }
 
+    func addFCMToken(_ token: String, for userID: String) async {
+        try? await db.collection("users").document(userID).setData(
+            ["fcmTokens": FieldValue.arrayUnion([token])],
+            merge: true
+        )
+    }
+
     func others(excluding userID: String) async throws -> [User] {
         let snapshot = try await db.collection("users").getDocuments()
         return snapshot.documents.compactMap { document in
