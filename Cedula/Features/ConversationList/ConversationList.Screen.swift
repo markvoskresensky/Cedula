@@ -75,7 +75,8 @@ private extension ConversationList.Screen {
                         conversationID: conversation.id,
                         title: conversation.title,
                         currentUserID: model.currentUser.id,
-                        chatService: model.chatService
+                        chatService: model.chatService,
+                        storageService: model.storageService
                     )
                 } label: {
                     ConversationList.Row(conversation: conversation)

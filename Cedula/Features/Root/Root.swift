@@ -14,7 +14,9 @@ extension Root {
         let model = ViewModel(
             authService: FirebaseAuthService(),
             userService: FirestoreUserService(),
-            chatService: FirestoreChatService()
+            chatService: FirestoreChatService(),
+            storageService: FirebaseStorageService(),
+            networkMonitor: NetworkMonitor()
         )
         return Root.Screen(model: model)
     }

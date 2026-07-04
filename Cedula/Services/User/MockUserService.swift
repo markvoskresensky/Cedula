@@ -23,6 +23,8 @@ final class MockUserService: UserService {
         }
     }
 
+    func addFCMToken(_ token: String, for userID: String) async {}
+
     func others(excluding userID: String) async throws -> [User] {
         users.filter { $0.id != userID }
     }

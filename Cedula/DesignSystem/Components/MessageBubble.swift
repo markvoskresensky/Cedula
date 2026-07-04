@@ -16,9 +16,24 @@ struct MessageBubble: View {
             if isOutgoing { Spacer(minLength: Theme.Spacing.xl) }
 
             VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
-                Text(message.text)
-                    .font(.messageBody)
-                    .foregroundStyle(textColor)
+                if let imageURL = message.imageURL, let url = URL(string: imageURL) {
+                    AsyncImage(url: url) { image in
+                        image
+                            .resizable()
+                            .scaledToFill()
+                    } placeholder: {
+                        ProgressView()
+                            .frame(height: 160)
+                    }
+                    .frame(maxWidth: 220, maxHeight: 220)
+                    .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.bubble, style: .continuous))
+                }
+
+                if !message.text.isEmpty {
+                    Text(message.text)
+                        .font(.messageBody)
+                        .foregroundStyle(textColor)
+                }
 
                 HStack(spacing: Theme.Spacing.xs) {
                     Text(message.sentAt, style: .time)
