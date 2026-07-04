@@ -38,6 +38,19 @@ extension Chat {
                     .background(.bar)
                 }
                 .animation(.default, value: model.isOtherTyping)
+                .alert(
+                    "common_error_title",
+                    isPresented: Binding(
+                        get: { model.errorMessage != nil },
+                        set: { if !$0 { model.clearError() } }
+                    )
+                ) {
+                    Button("common_ok_button_title", role: .cancel) { model.clearError() }
+                } message: {
+                    if let errorMessage = model.errorMessage {
+                        Text(errorMessage)
+                    }
+                }
                 .task { await model.observe() }
                 .task { await model.observeTyping() }
                 .onDisappear { model.stopTyping() }
@@ -46,7 +59,19 @@ extension Chat {
 }
 
 private extension Chat.Screen {
+    @ViewBuilder
     var messages: some View {
+        if !model.hasLoaded {
+            ProgressView()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+        } else if model.messages.isEmpty {
+            ContentUnavailableView("chat_screen_empty_title", systemImage: "bubble.left.and.bubble.right")
+        } else {
+            messageList
+        }
+    }
+
+    var messageList: some View {
         ScrollViewReader { proxy in
             ScrollView {
                 LazyVStack(spacing: Theme.Spacing.s) {

@@ -13,6 +13,8 @@ extension Chat {
     final class ViewModel {
         let title: String
         private(set) var messages: [Message] = []
+        private(set) var hasLoaded = false
+        private(set) var errorMessage: String?
         private(set) var isOtherTyping = false
         var draft: String = "" {
             didSet { updateTyping() }
@@ -35,8 +37,13 @@ extension Chat {
         func observe() async {
             for await messages in chatService.messages(in: conversationID) {
                 self.messages = messages
+                hasLoaded = true
                 await markIncomingAsRead()
             }
+        }
+
+        func clearError() {
+            errorMessage = nil
         }
 
         func observeTyping() async {
@@ -70,7 +77,12 @@ extension Chat {
             let text = draft.trimmingCharacters(in: .whitespacesAndNewlines)
             guard !text.isEmpty else { return }
             draft = ""
-            try? await chatService.send(text: text, imageURL: nil, to: conversationID, from: currentUserID)
+            do {
+                try await chatService.send(text: text, imageURL: nil, to: conversationID, from: currentUserID)
+            } catch {
+                draft = text // restore so the user can retry
+                errorMessage = error.localizedDescription
+            }
         }
 
         func sendImage(_ data: Data) async {
@@ -79,7 +91,7 @@ extension Chat {
                 let url = try await storageService.uploadImage(data, path: path)
                 try await chatService.send(text: "", imageURL: url, to: conversationID, from: currentUserID)
             } catch {
-                // Upload/send failure ignored for now
+                errorMessage = error.localizedDescription
             }
         }
 
